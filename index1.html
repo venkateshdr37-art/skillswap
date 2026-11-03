@@ -1,0 +1,1869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkillSwap | Student Peer Learning Platform</title>
+  <style>
+    :root {
+      --bg: #f5f7f3;
+      --panel: #ffffff;
+      --panel-2: #f2f6f0;
+      --line: #dfe9e2;
+      --text: #173126;
+      --text-soft: #65756a;
+      --green-1: #0f6a47;
+      --green-2: #1a874f;
+      --green-3: #dff2e7;
+      --orange: #f2a65a;
+      --orange-soft: #fff0de;
+      --red: #d76658;
+      --red-soft: #ffe9e6;
+      --shadow: 0 18px 42px rgba(17, 56, 38, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(180deg, #f7faf6 0%, #f0f5f1 100%);
+      color: var(--text);
+    }
+
+    a { text-decoration: none; color: inherit; }
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 260px;
+      background: rgba(255,255,255,0.92);
+      border-right: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 24px 16px 18px;
+      backdrop-filter: blur(10px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 8px 24px;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--green-1), var(--green-2));
+      color: #fff;
+      font-weight: 800;
+      box-shadow: 0 10px 24px rgba(26, 135, 79, 0.32);
+      font-size: 18px;
+    }
+
+    .brand-text strong {
+      display: block;
+      font-size: 1.05rem;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-text span {
+      display: block;
+      color: var(--text-soft);
+      font-size: 0.72rem;
+      margin-top: 2px;
+    }
+
+    .nav-group {
+      margin: 10px 0 18px;
+      padding: 0 4px;
+    }
+
+    .nav-title {
+      color: #93a29a;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 8px 10px 10px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav-btn {
+      width: 100%;
+      background: transparent;
+      border: none;
+      text-align: left;
+      padding: 11px 12px;
+      border-radius: 12px;
+      color: #495c52;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .nav-btn:hover, .nav-btn.active {
+      background: var(--green-3);
+      color: var(--green-1);
+    }
+
+    .nav-icon {
+      width: 22px;
+      text-align: center;
+      font-size: 1.05rem;
+    }
+
+    .sidebar-card {
+      margin-top: 18px;
+      background: linear-gradient(180deg, #f6faf6, #edf5ef);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 15px 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .sidebar-card strong {
+      display: block;
+      font-size: 0.8rem;
+      margin-bottom: 8px;
+    }
+
+    .sidebar-card p {
+      margin: 0;
+      font-size: 0.72rem;
+      color: var(--text-soft);
+      line-height: 1.5;
+    }
+
+    .reset-btn {
+      margin-top: 18px;
+      border: none;
+      background: transparent;
+      color: var(--text-soft);
+      font-weight: 700;
+      padding: 10px 8px;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+
+    .reset-btn:hover {
+      background: #edf3ee;
+    }
+
+    .main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .topbar {
+      height: 74px;
+      background: rgba(255,255,255,0.80);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+    }
+
+    .topbar .tagline {
+      color: var(--text-soft);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #f4d9bb, #ebbd7b);
+      color: #6a4521;
+      font-weight: 800;
+      font-size: 0.72rem;
+    }
+
+    .content {
+      max-width: 1250px;
+      margin: 0 auto;
+      padding: 30px 28px 60px;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .hero-section {
+      background: linear-gradient(135deg, #113c2d, #175f44 60%, #1c754d);
+      border-radius: 24px;
+      color: #fff;
+      padding: 28px 30px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 26px 50px rgba(14, 54, 42, 0.18);
+    }
+
+    .hero-section::before {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      right: 120px;
+      top: -120px;
+      background: rgba(255,255,255,0.06);
+      box-shadow: 0 0 0 26px rgba(255,255,255,0.04), 0 0 0 52px rgba(255,255,255,0.02);
+    }
+
+    .hero-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-copy h1 {
+      margin: 0;
+      font-size: clamp(2rem, 3vw, 3rem);
+      line-height: 1.08;
+      letter-spacing: -0.06em;
+    }
+
+    .hero-copy p {
+      margin: 10px 0 0;
+      color: rgba(255,255,255,0.78);
+      line-height: 1.6;
+      max-width: 600px;
+      font-size: 0.93rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .btn {
+      border: none;
+      padding: 12px 18px;
+      border-radius: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.8rem;
+    }
+
+    .btn.primary {
+      background: linear-gradient(180deg, #ffffff, #eaf2eb);
+      color: var(--green-1);
+      box-shadow: 0 12px 20px rgba(255,255,255,0.15);
+    }
+
+    .btn.secondary {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.18);
+    }
+
+    .btn.green {
+      background: var(--green-1);
+      color: #fff;
+    }
+
+    .btn.green:hover { background: var(--green-2); }
+    .btn.white {
+      background: #fff;
+      color: var(--green-1);
+    }
+
+    .btn.soft {
+      background: #edf5ef;
+      color: var(--green-1);
+    }
+
+    .btn.orange {
+      background: var(--orange-soft);
+      color: #986533;
+    }
+
+    .btn.red {
+      background: var(--red-soft);
+      color: var(--red);
+    }
+
+    .top-badges {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.9);
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .hero-mini {
+      min-width: 260px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 16px;
+      backdrop-filter: blur(8px);
+    }
+
+    .mini-stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 0.8rem;
+    }
+
+    .mini-stat strong {
+      font-size: 1.4rem;
+      letter-spacing: -0.05em;
+    }
+
+    .mini-progress {
+      height: 8px;
+      background: rgba(255,255,255,0.14);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .mini-progress > span {
+      display: block;
+      width: 78%;
+      height: 100%;
+      background: linear-gradient(90deg, #f7ddab, #f5c165);
+      border-radius: inherit;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin: 28px 0 16px;
+    }
+
+    .page-header h2 {
+      margin: 0;
+      font-size: clamp(1.5rem, 2vw, 2rem);
+      letter-spacing: -0.05em;
+    }
+
+    .page-header .demo {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #fff3e8;
+      color: #a8682b;
+      border: 1px solid #f5d8b4;
+      font-size: 0.72rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(150px, 1fr));
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .stat-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px 18px 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-card .label {
+      color: var(--text-soft);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .stat-card .value {
+      margin-top: 10px;
+      font-size: clamp(1.75rem, 3vw, 2.4rem);
+      font-weight: 900;
+      letter-spacing: -0.08em;
+    }
+
+    .stat-card .note {
+      margin-top: 6px;
+      color: var(--green-1);
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr;
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px 18px 16px;
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .card-head h3 {
+      margin: 0;
+      font-size: 1.05rem;
+      letter-spacing: -0.04em;
+    }
+
+    .linkish {
+      background: transparent;
+      border: none;
+      color: var(--green-1);
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 0.75rem;
+    }
+
+    .partners, .session-list, .request-list, .admins {
+      display: grid;
+      gap: 12px;
+    }
+
+    .partner-row, .session-row, .request-row {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fbfcfb;
+    }
+
+    .mini-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #f8debd, #efb66b);
+      color: #865d2c;
+      font-weight: 800;
+      font-size: 0.7rem;
+    }
+
+    .partner-meta, .session-meta, .request-meta {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .partner-meta strong, .session-meta strong, .request-meta strong {
+      display: block;
+      font-size: 0.82rem;
+      margin-bottom: 4px;
+    }
+
+    .partner-meta small, .session-meta small, .request-meta small {
+      color: var(--text-soft);
+      font-size: 0.72rem;
+      display: block;
+      line-height: 1.5;
+    }
+
+    .match-score {
+      background: var(--green-3);
+      color: var(--green-1);
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .tag {
+      background: #f0f6f1;
+      color: #4a6157;
+      border-radius: 999px;
+      padding: 5px 8px;
+      font-size: 0.66rem;
+      font-weight: 700;
+    }
+
+    .tag.green {
+      background: var(--green-3);
+      color: var(--green-1);
+    }
+
+    .tag.orange {
+      background: var(--orange-soft);
+      color: #9a692f;
+    }
+
+    .tag.red {
+      background: var(--red-soft);
+      color: var(--red);
+    }
+
+    .empty {
+      border: 1px dashed #d7e1d9;
+      background: #fafcf9;
+      color: var(--text-soft);
+      text-align: center;
+      padding: 20px 14px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+    }
+
+    .searchbar {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 10px;
+      margin: 18px 0 20px;
+    }
+
+    .field, .input, .select, textarea {
+      width: 100%;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: var(--text);
+      font-size: 0.82rem;
+      outline: none;
+    }
+
+    textarea { resize: vertical; min-height: 88px; }
+    .field:focus, .input:focus, .select:focus, textarea:focus {
+      border-color: rgba(18,124,76,0.38);
+      box-shadow: 0 0 0 3px rgba(18,124,76,0.08);
+    }
+
+    .skill-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .skill-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px 15px;
+      box-shadow: 0 12px 18px rgba(20,52,35,0.03);
+    }
+
+    .skill-icon {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #ebf8ef, #dff0e5);
+      color: var(--green-1);
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    .skill-card h4 {
+      margin: 12px 0 6px;
+      font-size: 1rem;
+      letter-spacing: -0.04em;
+    }
+
+    .skill-card p {
+      margin: 0 0 12px;
+      font-size: 0.74rem;
+      color: var(--text-soft);
+      line-height: 1.5;
+    }
+
+    .profile-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 10px;
+    }
+
+    .form-block {
+      display: grid;
+      gap: 12px;
+    }
+
+    .label {
+      display: block;
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .notice {
+      border: 1px solid #dfeee1;
+      background: #f4faf5;
+      color: #496158;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 0.76rem;
+      line-height: 1.6;
+      margin: 16px 0 14px;
+    }
+
+    .ai-layout {
+      display: grid;
+      grid-template-columns: 0.9fr 1.3fr;
+      gap: 18px;
+      margin-top: 12px;
+    }
+
+    .ai-tools {
+      background: linear-gradient(180deg, #f6faf8, #eef8f2);
+      border:1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .ai-tools h3 { margin: 0 0 8px; }
+    .ai-tools .sub {
+      color: var(--text-soft);
+      font-size: 0.75rem;
+      margin: 0 0 18px;
+      line-height: 1.6;
+    }
+
+    .ai-output {
+      background: #fff;
+      border:1px solid var(--line);
+      border-radius: 18px;
+      min-height: 200px;
+      padding: 18px;
+    }
+
+    .roadmap-step {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .roadmap-step:last-child { border-bottom: none; }
+    .step-no {
+      width: 26px;
+      height: 26px;
+      background: var(--green-3);
+      color: var(--green-1);
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      font-size: 0.72rem;
+      font-weight: 900;
+    }
+
+    .roadmap-step strong {
+      display: block;
+      font-size: 0.82rem;
+      margin-bottom: 4px;
+    }
+
+    .roadmap-step small {
+      display: block;
+      color: var(--text-soft);
+      font-size: 0.72rem;
+      line-height: 1.5;
+    }
+
+    .quiz-block {
+      display: grid;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .quiz-option {
+      width: 100%;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      text-align: left;
+      font-size: 0.8rem;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .quiz-option.selected {
+      border-color: rgba(18,124,76,0.54);
+      background: var(--green-3);
+    }
+
+    .quiz-option.correct {
+      background: #eaf9ef;
+      border-color: #9cd2b2;
+    }
+
+    .quiz-option.wrong {
+      background: #fff0ee;
+      border-color: #edb5b0;
+    }
+
+    .score-line {
+      margin-top: 12px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--green-1);
+    }
+
+    .admin-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .admin-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      background: linear-gradient(180deg, #ffffff, #fbfcfb);
+    }
+
+    .admin-card h4 {
+      margin: 0 0 10px;
+      font-size: 0.92rem;
+    }
+
+    .admin-card .small {
+      color: var(--text-soft);
+      font-size: 0.72rem;
+      line-height: 1.6;
+    }
+
+    .admin-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .muted {
+      color: var(--text-soft);
+    }
+
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      background: rgba(16, 54, 39, 0.96);
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 12px;
+      box-shadow: 0 20px 38px rgba(17,36,26,0.18);
+      font-size: 0.75rem;
+      display: none;
+      z-index: 20;
+    }
+
+    @media (max-width: 980px) {
+      .sidebar {
+        width: 92px;
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+      .brand-text, .nav-title, .nav-btn .label, .sidebar-card, .reset-btn {
+        display: none;
+      }
+      .nav-btn {
+        justify-content: center;
+        padding: 12px 8px;
+      }
+      .grid-2, .ai-layout, .profile-form, .stats-grid, .skill-grid, .admin-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .content { padding: 18px 14px 44px; }
+      .topbar { padding: 0 14px; }
+      .searchbar { grid-template-columns: 1fr; }
+      .page-header { align-items: flex-start; flex-direction: column; }
+      .stats-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">↗</div>
+      <div class="brand-text">
+        <strong>SkillSwap</strong>
+        <span>Learn one. Teach one.</span>
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Workspace</div>
+      <div class="nav">
+        <button class="nav-btn active" data-page="dashboard">
+          <span class="nav-icon">⌂</span>
+          <span class="label">Dashboard</span>
+        </button>
+        <button class="nav-btn" data-page="discover">
+          <span class="nav-icon">⌕</span>
+          <span class="label">Discover</span>
+        </button>
+        <button class="nav-btn" data-page="requests">
+          <span class="nav-icon">⇄</span>
+          <span class="label">Requests</span>
+        </button>
+        <button class="nav-btn" data-page="sessions">
+          <span class="nav-icon">▣</span>
+          <span class="label">Sessions</span>
+        </button>
+        <button class="nav-btn" data-page="ai">
+          <span class="nav-icon">✦</span>
+          <span class="label">AI Studio</span>
+        </button>
+        <button class="nav-btn" data-page="profile">
+          <span class="nav-icon">◎</span>
+          <span class="label">Profile</span>
+        </button>
+        <button class="nav-btn" data-page="admin">
+          <span class="nav-icon">⚙</span>
+          <span class="label">Admin</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <strong>Small steps. Big growth.</strong>
+      <p>Share your skills, learn from peers, and build a stronger campus learning network.</p>
+    </div>
+
+    <button class="reset-btn" id="resetDemo">↺ Reset demo data</button>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="tagline">Student communities &nbsp; / &nbsp; Prototype</div>
+      <div class="user">
+        <span id="headerName">Alex Morgan</span>
+        <div class="avatar" id="headerAvatar">AM</div>
+      </div>
+    </header>
+
+    <main class="content">
+      <section id="page-dashboard" class="page active"></section>
+      <section id="page-discover" class="page"></section>
+      <section id="page-requests" class="page"></section>
+      <section id="page-sessions" class="page"></section>
+      <section id="page-ai" class="page"></section>
+      <section id="page-profile" class="page"></section>
+      <section id="page-admin" class="page"></section>
+    </main>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const STORAGE_KEY = "skillswap-polished-prototype-v1";
+
+  const initialState = {
+    currentPage: "dashboard",
+    profile: {
+      name: "Alex Morgan",
+      major: "Computer Science",
+      year: "2nd Year",
+      bio: "Curious, collaborative learner who enjoys building practical projects and helping peers learn faster.",
+      teach: ["Python", "Figma"],
+      learn: ["UI/UX Design", "Public Speaking"]
+    },
+    points: 120,
+    requests: [
+      {
+        id: "r1",
+        sender: "Priya Sharma",
+        skill: "UI/UX Design",
+        message: "I would like to help you with UI/UX design. Want to schedule a session?",
+        direction: "incoming",
+        status: "Pending"
+      },
+      {
+        id: "r2",
+        sender: "Alex Morgan",
+        skill: "Python",
+        message: "Would like a focused session on Python basics.",
+        direction: "outgoing",
+        status: "Accepted"
+      }
+    ],
+    sessions: [
+      { id: "s1", partner: "Priya Sharma", skill: "UI/UX Design", date: "2026-11-08", time: "15:00", role: "Learning", status: "Scheduled" },
+      { id: "s2", partner: "Jordan Lee", skill: "Python", date: "2026-11-04", time: "10:30", role: "Teaching", status: "Completed" }
+    ],
+    quizScores: [],
+    peers: [
+      { id: "p1", name: "Priya Sharma", major: "Visual Communication", year: "3rd Year", teaches: ["UI/UX Design", "Figma"], learns: ["Python", "Data Analysis"], availability: "Weekday evenings" },
+      { id: "p2", name: "Jordan Lee", major: "Computer Science", year: "2nd Year", teaches: ["Python", "Web Development"], learns: ["Figma", "Graphic Design"], availability: "Weekend mornings" },
+      { id: "p3", name: "Samira Khan", major: "Media Studies", year: "1st Year", teaches: ["Public Speaking", "Creative Writing"], learns: ["Python", "Web Development"], availability: "Flexible" },
+      { id: "p4", name: "Noah Williams", major: "Information Systems", year: "3rd Year", teaches: ["Data Analysis", "Excel"], learns: ["UI/UX Design", "Figma"], availability: "Weekday afternoons" },
+      { id: "p5", name: "Mei Chen", major: "Design", year: "2nd Year", teaches: ["Graphic Design", "UI/UX Design"], learns: ["Python", "Public Speaking"], availability: "Weekends" },
+      { id: "p6", name: "Ravi Patel", major: "Engineering", year: "2nd Year", teaches: ["Web Development", "JavaScript"], learns: ["Figma", "Data Analysis"], availability: "Evenings" }
+    ]
+  };
+
+  let state = loadState();
+
+  function loadState() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      if (!saved) return structuredClone(initialState);
+      return {
+        ...structuredClone(initialState),
+        ...saved,
+        profile: { ...structuredClone(initialState.profile), ...(saved.profile || {}) },
+        requests: Array.isArray(saved.requests) ? saved.requests : structuredClone(initialState.requests),
+        sessions: Array.isArray(saved.sessions) ? saved.sessions : structuredClone(initialState.sessions),
+        peers: Array.isArray(saved.peers) ? saved.peers : structuredClone(initialState.peers),
+        quizScores: Array.isArray(saved.quizScores) ? saved.quizScores : []
+      };
+    } catch {
+      return structuredClone(initialState);
+    }
+  }
+
+  function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function initials(name) {
+    return name.split(" ").filter(Boolean).slice(0, 2).map(n => n[0].toUpperCase()).join("");
+  }
+
+  function escapeHtml(str = "") {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function showToast(msg) {
+    const toast = document.getElementById("toast");
+    toast.textContent = msg;
+    toast.style.display = "block";
+    clearTimeout(showToast.timer);
+    showToast.timer = setTimeout(() => {
+      toast.style.display = "none";
+    }, 2600);
+  }
+
+  function getMatchingPeers() {
+    return state.peers
+      .map(peer => {
+        const teachOverlap = peer.teaches.filter(skill => state.profile.learn.includes(skill));
+        const learnOverlap = peer.learns.filter(skill => state.profile.teach.includes(skill));
+        const score = Math.min(99, 25 + (teachOverlap.length * 27) + (learnOverlap.length * 27) + (peer.availability ? 8 : 0));
+        return { ...peer, teachOverlap, learnOverlap, score };
+      })
+      .filter(p => p.score > 0)
+      .sort((a, b) => b.score - a.score);
+  }
+
+  function renderDashboard() {
+    const peers = getMatchingPeers().slice(0, 3);
+    const upcoming = state.sessions.filter(s => s.status === "Scheduled").slice(0, 2);
+    const completed = state.sessions.filter(s => s.status === "Completed").length;
+
+    return `
+      <div class="page-header">
+        <div>
+          <h2>Hello, ${escapeHtml(state.profile.name.split(" ")[0])} 👋</h2>
+        </div>
+        <div class="demo">Demo mode · Sample student data</div>
+      </div>
+
+      <section class="hero-section">
+        <div class="hero-row">
+          <div class="hero-copy">
+            <h1>Learn a skill. Teach a skill.</h1>
+            <p>Create a stronger peer learning network by connecting with classmates who can teach what you want to learn and learn from what you already know.</p>
+            <div class="hero-actions">
+              <button class="btn primary" data-goto="discover">Find a learning partner</button>
+              <button class="btn secondary" data-goto="ai">Open AI Studio</button>
+            </div>
+            <div class="top-badges">
+              <span class="badge">✓ Rule-based matching</span>
+              <span class="badge">✓ Skill exchange sessions</span>
+              <span class="badge">✓ AI learning support</span>
+            </div>
+          </div>
+
+          <div class="hero-mini">
+            <div class="mini-stat">
+              <span>Profile strength</span>
+              <strong>78%</strong>
+            </div>
+            <div class="mini-progress"><span></span></div>
+            <div class="mini-stat" style="margin-top:18px;">
+              <span>Availability</span>
+              <strong>4 slots</strong>
+            </div>
+            <div class="mini-stat" style="margin-top:8px;">
+              <span>Skill exchange</span>
+              <strong>3 active</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="stats-grid" style="margin-top:20px;">
+        <div class="stat-card">
+          <div class="label">Available points</div>
+          <div class="value">${state.points}</div>
+          <div class="note">Use points to request support</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Skills I can teach</div>
+          <div class="value">${state.profile.teach.length}</div>
+          <div class="note">Share your expertise</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Skills I want to learn</div>
+          <div class="value">${state.profile.learn.length}</div>
+          <div class="note">Keep growing</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Completed sessions</div>
+          <div class="value">${completed}</div>
+          <div class="note">Progress tracking</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head">
+            <h3>Recommended partners</h3>
+            <button class="linkish" data-goto="discover">View all →</button>
+          </div>
+          <div class="partners">
+            ${peers.length ? peers.map(peer => `
+              <div class="partner-row">
+                <div class="mini-avatar">${escapeHtml(initials(peer.name))}</div>
+                <div class="partner-meta">
+                  <strong>${escapeHtml(peer.name)} · ${escapeHtml(peer.year)}</strong>
+                  <small>${escapeHtml(peer.major)} · ${escapeHtml(peer.availability)}</small>
+                  <div class="tag-row">
+                    ${peer.teachOverlap.map(skill => `<span class="tag green">You want to learn ${escapeHtml(skill)}</span>`).join("")}
+                    ${peer.learnOverlap.map(skill => `<span class="tag">You can teach ${escapeHtml(skill)}</span>`).join("")}
+                  </div>
+                </div>
+                <span class="match-score">${peer.score}% match</span>
+              </div>
+            `).join("") : `<div class="empty">No matches yet. Add more skills to your profile.</div>`}
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3>Upcoming sessions</h3>
+            <button class="linkish" data-goto="sessions">See all →</button>
+          </div>
+          <div class="session-list">
+            ${upcoming.length ? upcoming.map(s => `
+              <div class="session-row">
+                <div class="mini-avatar">${escapeHtml(initials(s.partner))}</div>
+                <div class="session-meta">
+                  <strong>${escapeHtml(s.skill)} with ${escapeHtml(s.partner)}</strong>
+                  <small>${escapeHtml(s.date)} at ${escapeHtml(s.time)} · ${escapeHtml(s.role)}</small>
+                </div>
+                <span class="tag green">${escapeHtml(s.status)}</span>
+              </div>
+            `).join("") : `<div class="empty">No sessions scheduled yet. Find a partner to get started.</div>`}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderDiscover() {
+    const matches = getMatchingPeers();
+    const allSkills = [...new Set(state.peers.flatMap(peer => peer.teaches))].sort();
+
+    return `
+      <div class="page-header">
+        <h2>Discover skills</h2>
+        <div class="demo">Transparent matching</div>
+      </div>
+
+      <div class="searchbar">
+        <input id="skillSearch" class="input" placeholder="Search skill, topic or student name" />
+        <select id="skillFilter" class="select">
+          <option value="">All skill categories</option>
+          ${allSkills.map(skill => `<option value="${escapeHtml(skill)}">${escapeHtml(skill)}</option>`).join("")}
+        </select>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <h3>Recommended partners</h3>
+          <span class="tag green">${matches.length} matches</span>
+        </div>
+
+        <div id="matchResults" class="partners">
+          ${matches.length ? matches.map(peer => `
+            <div class="partner-row" data-match-name="${escapeHtml(peer.name.toLowerCase())}" data-skill-list="${escapeHtml(peer.teaches.join(" ").toLowerCase())}">
+              <div class="mini-avatar">${escapeHtml(initials(peer.name))}</div>
+              <div class="partner-meta">
+                <strong>${escapeHtml(peer.name)} · ${escapeHtml(peer.year)}</strong>
+                <small>${escapeHtml(peer.major)} · ${escapeHtml(peer.availability)}</small>
+                <div class="tag-row">
+                  ${peer.teachOverlap.map(s => `<span class="tag green">${escapeHtml(s)}</span>`).join("")}
+                  ${peer.learnOverlap.map(s => `<span class="tag">${escapeHtml(s)}</span>`).join("")}
+                </div>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="match-score">${peer.score}%</span>
+                <button class="btn green" data-action="sendRequest" data-peer-id="${peer.id}">Request</button>
+              </div>
+            </div>
+          `).join("") : `<div class="empty">No partners match your skills yet.</div>`}
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:18px;">
+        <div class="card-head">
+          <h3>Skill marketplace</h3>
+          <span class="tag">${allSkills.length} skills listed</span>
+        </div>
+
+        <div id="skillCards" class="skill-grid">
+          ${allSkills.map((skill, index) => {
+            const icons = ["⌘", "✎", "◈", "▤", "✦", "◎"];
+            const teachers = state.peers.filter(peer => peer.teaches.includes(skill)).map(p => p.name);
+            return `
+              <div class="skill-card" data-skill-name="${escapeHtml(skill.toLowerCase())}">
+                <div class="skill-icon">${icons[index % icons.length]}</div>
+                <h4>${escapeHtml(skill)}</h4>
+                <p>${teachers.length} peer${teachers.length === 1 ? "" : "s"} currently teaching this skill</p>
+                <div class="tag-row">
+                  ${teachers.slice(0, 2).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join("")}
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderRequests() {
+    const incoming = state.requests.filter(r => r.direction === "incoming");
+    const outgoing = state.requests.filter(r => r.direction === "outgoing");
+
+    return `
+      <div class="page-header">
+        <h2>Learning requests</h2>
+        <div class="demo">Status tracking</div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head">
+            <h3>Incoming</h3>
+            <span class="tag orange">${incoming.filter(r => r.status === "Pending").length} pending</span>
+          </div>
+
+          <div class="request-list">
+            ${incoming.length ? incoming.map(r => `
+              <div class="request-row">
+                <div class="mini-avatar">${escapeHtml(initials(r.sender))}</div>
+                <div class="request-meta">
+                  <strong>${escapeHtml(r.sender)} · ${escapeHtml(r.skill)}</strong>
+                  <small>${escapeHtml(r.message)}</small>
+                </div>
+                <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                  <span class="tag ${r.status === "Accepted" ? "green" : r.status === "Declined" ? "red" : "orange"}">${escapeHtml(r.status)}</span>
+                  ${r.status === "Pending" ? `
+                    <button class="btn green" data-action="acceptRequest" data-id="${r.id}">Accept</button>
+                    <button class="btn red" data-action="declineRequest" data-id="${r.id}">Decline</button>
+                  ` : ""}
+                </div>
+              </div>
+            `).join("") : `<div class="empty">No incoming requests.</div>`}
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3>Sent by you</h3>
+            <span class="tag">${outgoing.length} total</span>
+          </div>
+
+          <div class="request-list">
+            ${outgoing.length ? outgoing.map(r => `
+              <div class="request-row">
+                <div class="mini-avatar">${escapeHtml(initials(r.sender))}</div>
+                <div class="request-meta">
+                  <strong>You requested ${escapeHtml(r.skill)}</strong>
+                  <small>${escapeHtml(r.message)}</small>
+                </div>
+                <span class="tag ${r.status === "Accepted" ? "green" : r.status === "Declined" ? "red" : "orange"}">${escapeHtml(r.status)}</span>
+              </div>
+            `).join("") : `<div class="empty">No outgoing requests.</div>`}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderSessions() {
+    const scheduled = state.sessions.filter(s => s.status === "Scheduled");
+    const completed = state.sessions.filter(s => s.status === "Completed");
+
+    return `
+      <div class="page-header">
+        <h2>Sessions & points</h2>
+        <div class="demo">Learning progress summary</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="label">Points balance</div>
+          <div class="value">${state.points}</div>
+          <div class="note">Earn 25 points per completed teaching session</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Upcoming</div>
+          <div class="value">${scheduled.length}</div>
+          <div class="note">Ready to meet</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Completed</div>
+          <div class="value">${completed.length}</div>
+          <div class="note">Evidence of learning</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Quiz attempts</div>
+          <div class="value">${state.quizScores.length}</div>
+          <div class="note">Practice the AI demo</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head">
+            <h3>Upcoming sessions</h3>
+          </div>
+          <div class="session-list">
+            ${scheduled.length ? scheduled.map(s => `
+              <div class="session-row">
+                <div class="mini-avatar">${escapeHtml(initials(s.partner))}</div>
+                <div class="session-meta">
+                  <strong>${escapeHtml(s.skill)} · ${escapeHtml(s.role)} with ${escapeHtml(s.partner)}</strong>
+                  <small>${escapeHtml(s.date)} at ${escapeHtml(s.time)}</small>
+                </div>
+                <button class="btn soft" data-action="completeSession" data-id="${s.id}">Complete</button>
+              </div>
+            `).join("") : `<div class="empty">No upcoming sessions yet.</div>`}
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3>Completed sessions</h3>
+          </div>
+          <div class="session-list">
+            ${completed.length ? completed.map(s => `
+              <div class="session-row">
+                <div class="mini-avatar">${escapeHtml(initials(s.partner))}</div>
+                <div class="session-meta">
+                  <strong>${escapeHtml(s.skill)} · ${escapeHtml(s.role)} with ${escapeHtml(s.partner)}</strong>
+                  <small>${escapeHtml(s.date)} at ${escapeHtml(s.time)}</small>
+                </div>
+                <span class="tag green">Done</span>
+              </div>
+            `).join("") : `<div class="empty">Completed sessions will appear here.</div>`}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderAI() {
+    return `
+      <div class="page-header">
+        <h2>AI Learning Studio</h2>
+        <div class="demo">Demo mode · sample output</div>
+      </div>
+
+      <div class="notice">
+        <strong>Prototype note:</strong> AI-generated explanations, roadmaps and quizzes are demo content, not real-time API output. This is a learning helper only — users should verify important information with trusted sources.
+      </div>
+
+      <div class="ai-layout">
+        <div class="ai-tools">
+          <h3>Build a learning roadmap</h3>
+          <p class="sub">Select a skill and current level to generate a beginner-friendly growth plan.</p>
+
+          <div style="display:grid; gap:12px;">
+            <div>
+              <label class="label" for="roadmapSkill">Skill / topic</label>
+              <input id="roadmapSkill" class="input" value="Python">
+            </div>
+
+            <div>
+              <label class="label" for="roadmapLevel">Current level</label>
+              <select id="roadmapLevel" class="select">
+                <option>Beginner</option>
+                <option>Intermediate</option>
+                <option>Advanced</option>
+              </select>
+            </div>
+
+            <button class="btn green" data-action="generateRoadmap">Generate roadmap</button>
+          </div>
+
+          <div style="height:1px; background:var(--line); margin:22px 0;"></div>
+
+          <h3>Quick practice quiz</h3>
+          <p class="sub">Test your understanding with a short Python quiz.</p>
+          <button class="btn soft" data-action="startQuiz">Start quiz</button>
+        </div>
+
+        <div id="aiOutput" class="ai-output">
+          <div class="empty">Your AI roadmap or quiz output will appear here.</div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderProfile() {
+    return `
+      <div class="page-header">
+        <h2>My profile</h2>
+        <div class="demo">Student details</div>
+      </div>
+
+      <div class="card">
+        <form id="profileForm">
+          <div class="profile-form">
+            <div class="form-block">
+              <div>
+                <label class="label" for="name">Full name</label>
+                <input id="name" class="input" value="${escapeHtml(state.profile.name)}" />
+              </div>
+
+              <div>
+                <label class="label" for="major">Major / program</label>
+                <input id="major" class="input" value="${escapeHtml(state.profile.major)}" />
+              </div>
+
+              <div>
+                <label class="label" for="year">Study year</label>
+                <input id="year" class="input" value="${escapeHtml(state.profile.year)}" />
+              </div>
+
+              <div>
+                <label class="label" for="bio">Short bio</label>
+                <textarea id="bio">${escapeHtml(state.profile.bio)}</textarea>
+              </div>
+            </div>
+
+            <div class="form-block">
+              <div>
+                <label class="label" for="teachSkills">Skills I can teach</label>
+                <input id="teachSkills" class="input" value="${escapeHtml(state.profile.teach.join(', '))}" />
+              </div>
+
+              <div>
+                <label class="label" for="learnSkills">Skills I want to learn</label>
+                <input id="learnSkills" class="input" value="${escapeHtml(state.profile.learn.join(', '))}" />
+              </div>
+
+              <div class="notice">
+                Your skills influence the rule-based partner recommendation system. Students with complementary teach/learn skills appear as better matches.
+              </div>
+
+              <button class="btn green" type="submit">Save profile</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    `;
+  }
+
+  function renderAdmin() {
+    return `
+      <div class="page-header">
+        <h2>Admin panel</h2>
+        <div class="demo">Platform management</div>
+      </div>
+
+      <div class="admin-grid">
+        <div class="admin-card">
+          <h4>User management</h4>
+          <div class="small">Review student profiles, verify accounts, and monitor eligibility for skill-exchange requests.</div>
+          <div class="admin-actions">
+            <span class="muted">18 active users</span>
+            <button class="btn soft">Manage</button>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h4>Skill categories</h4>
+          <div class="small">Maintain categories like Programming, Design, Communication, Data, and Creative Learning.</div>
+          <div class="admin-actions">
+            <span class="muted">12 categories</span>
+            <button class="btn soft">Edit</button>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h4>Reports</h4>
+          <div class="small">Track session completion, request trends, and points activity for the platform community.</div>
+          <div class="admin-actions">
+            <span class="muted">4 reports</span>
+            <button class="btn soft">Open</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:18px;">
+        <div class="card-head">
+          <h3>Activity overview</h3>
+          <span class="tag green">Recently active</span>
+        </div>
+
+        <div class="admins">
+          <div class="session-row">
+            <div class="mini-avatar">AP</div>
+            <div class="session-meta">
+              <strong>Alex Morgan</strong>
+              <small>Updated profile and requested a Python skill exchange session.</small>
+            </div>
+            <span class="tag">Today</span>
+          </div>
+          <div class="session-row">
+            <div class="mini-avatar">PS</div>
+            <div class="session-meta">
+              <strong>Priya Sharma</strong>
+              <small>Accepted a UI/UX session and completed learning notes.</small>
+            </div>
+            <span class="tag">Today</span>
+          </div>
+          <div class="session-row">
+            <div class="mini-avatar">JL</div>
+            <div class="session-meta">
+              <strong>Jordan Lee</strong>
+              <small>Offered a Python coaching session and reviewed peer feedback.</small>
+            </div>
+            <span class="tag">Yesterday</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function render() {
+    const pages = {
+      dashboard: renderDashboard,
+      discover: renderDiscover,
+      requests: renderRequests,
+      sessions: renderSessions,
+      ai: renderAI,
+      profile: renderProfile,
+      admin: renderAdmin
+    };
+
+    const pageKey = state.currentPage || "dashboard";
+    const pageContent = pages[pageKey] ? pages[pageKey]() : pages.dashboard();
+
+    Object.keys(pages).forEach(key => {
+      const el = document.getElementById("page-" + key);
+      if (el) el.innerHTML = key === pageKey ? pageContent : "";
+      el.classList.toggle("active", key === pageKey);
+    });
+
+    const activeNav = document.querySelectorAll(".nav-btn");
+    activeNav.forEach(btn => btn.classList.toggle("active", btn.dataset.page === pageKey));
+
+    document.getElementById("headerName").textContent = state.profile.name;
+    document.getElementById("headerAvatar").textContent = initials(state.profile.name);
+  }
+
+  function setPage(page) {
+    state.currentPage = page;
+    saveState();
+    render();
+  }
+
+  function normalizeSkills(value) {
+    return [...new Set(String(value).split(",").map(v => v.trim()).filter(Boolean))].slice(0, 10);
+  }
+
+  function sendRequest(peerId) {
+    const peer = state.peers.find(p => p.id === peerId);
+    if (!peer) return;
+    const alreadyExists = state.requests.some(r => r.direction === "outgoing" && r.sender === peer.name && r.skill === (peer.teaches.find(s => state.profile.learn.includes(s)) || peer.teaches[0]));
+    if (alreadyExists) {
+      showToast("A request with this student is already pending.");
+      return;
+    }
+    const skill = peer.teaches.find(s => state.profile.learn.includes(s)) || peer.teaches[0] || "General skill";
+    state.requests.unshift({
+      id: "r" + Date.now(),
+      sender: peer.name,
+      skill,
+      message: "I would like to exchange a session on " + skill + ". Are you available?",
+      direction: "outgoing",
+      status: "Pending"
+    });
+    saveState();
+    render();
+    showToast("Learning request sent.");
+  }
+
+  function acceptRequest(id) {
+    const req = state.requests.find(r => r.id === id);
+    if (!req) return;
+    req.status = "Accepted";
+    if (req.direction === "incoming") {
+      state.sessions.unshift({
+        id: "s" + Date.now(),
+        partner: req.sender,
+        skill: req.skill,
+        date: "2026-11-12",
+        time: "16:00",
+        role: "Learning",
+        status: "Scheduled"
+      });
+    }
+    saveState();
+    render();
+    showToast("Request accepted.");
+  }
+
+  function declineRequest(id) {
+    const req = state.requests.find(r => r.id === id);
+    if (!req) return;
+    req.status = "Declined";
+    saveState();
+    render();
+    showToast("Request declined.");
+  }
+
+  function completeSession(id) {
+    const session = state.sessions.find(s => s.id === id);
+    if (!session) return;
+    session.status = "Completed";
+    if (session.role === "Teaching") {
+      state.points += 25;
+    }
+    saveState();
+    render();
+    showToast(session.role === "Teaching" ? "Session completed. +25 points earned." : "Session marked completed.");
+  }
+
+  function generateRoadmap() {
+    const skill = document.getElementById("roadmapSkill")?.value || "Python";
+    const level = document.getElementById("roadmapLevel")?.value || "Beginner";
+    const currentSkill = skill.trim() || "your chosen skill";
+    const roadmap = currentSkill.toLowerCase().includes("python")
+      ? [
+          ["Python setup", "Install Python, configure the editor, and run a first script."],
+          ["Variables and data types", "Understand strings, integers, booleans, and lists."],
+          ["Conditions and loops", "Use if statements and for/while loops to control logic."],
+          ["Functions and reuse", "Break code into smaller, reusable building blocks."],
+          ["Collections and mini-project", "Use dictionaries and lists to build a small quiz or calculator app."]
+        ]
+      : [
+          ["Foundations", "Learn the basic vocabulary and core concepts behind " + currentSkill + "."],
+          ["Practical exercises", "Complete a short guided task with examples and checkpoints."],
+          ["Apply the skill", "Use it in a mini-project or real-world scenario."],
+          ["Feedback and revision", "Ask a peer to review your work and identify improvement areas."],
+          ["Showcase", "Build a small final deliverable and present what you learned."]
+        ];
+
+    const output = document.getElementById("aiOutput");
+    output.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px;">
+        <h3 style="margin:0;">${escapeHtml(level)} roadmap for ${escapeHtml(currentSkill)}</h3>
+        <span class="tag green">Sample output</span>
+      </div>
+      <div>
+        ${roadmap.map(([title, desc], index) => `
+          <div class="roadmap-step">
+            <div class="step-no">${index + 1}</div>
+            <div>
+              <strong>${escapeHtml(title)}</strong>
+              <small>${escapeHtml(desc)}</small>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  function startQuiz() {
+    const output = document.getElementById("aiOutput");
+    const questions = [
+      { q: "Which Python data type is best for storing an ordered list of items that can change?", options: ["Tuple", "List", "Set"], answer: 1, reason: "Lists are ordered and mutable." },
+      { q: "What keyword starts a conditional statement in Python?", options: ["when", "if", "check"], answer: 1, reason: "The if keyword controls conditional logic." },
+      { q: "What does a function let you do?", options: ["Create a style sheet", "Reuse a block of code", "Turn on the internet"], answer: 1, reason: "Functions help you reuse logic multiple times." }
+    ];
+
+    output.innerHTML = `
+      <div style="display:flex; justify-content:space-between; gap:10px; align-items:center; margin-bottom:10px;">
+        <h3 style="margin:0;">Python foundations quiz</h3>
+        <span class="tag">3 questions</span>
+      </div>
+      <div class="quiz-block">
+        ${questions.map((q, qi) => `
+          <div>
+            <div style="font-size:0.82rem; font-weight:800; margin-bottom:8px;">${qi + 1}. ${escapeHtml(q.q)}</div>
+            ${q.options.map((option, oi) => `
+              <button class="quiz-option" data-role="quiz-option" data-question="${qi}" data-choice="${oi}">${escapeHtml(option)}</button>
+            `).join("")}
+            <div class="muted" style="margin-top:6px; font-size:0.72rem;" id="quizReason-${qi}"></div>
+          </div>
+        `).join("")}
+      </div>
+      <button class="btn green" data-action="submitQuiz" style="margin-top:14px;">Check answers</button>
+      <div class="score-line" id="quizScoreText"></div>
+    `;
+  }
+
+  document.addEventListener("click", (event) => {
+    const navBtn = event.target.closest(".nav-btn");
+    if (navBtn) {
+      setPage(navBtn.dataset.page);
+      return;
+    }
+
+    const goto = event.target.closest("[data-goto]");
+    if (goto) {
+      setPage(goto.dataset.goto);
+      return;
+    }
+
+    const actionBtn = event.target.closest("[data-action]");
+    if (!actionBtn) return;
+
+    const action = actionBtn.dataset.action;
+    if (action === "sendRequest") {
+      sendRequest(actionBtn.dataset.peerId);
+      return;
+    }
+    if (action === "acceptRequest") {
+      acceptRequest(actionBtn.dataset.id);
+      return;
+    }
+    if (action === "declineRequest") {
+      declineRequest(actionBtn.dataset.id);
+      return;
+    }
+    if (action === "completeSession") {
+      completeSession(actionBtn.dataset.id);
+      return;
+    }
+    if (action === "generateRoadmap") {
+      generateRoadmap();
+      return;
+    }
+    if (action === "startQuiz") {
+      startQuiz();
+      return;
+    }
+    if (action === "submitQuiz") {
+      const questions = [
+        { q: "Which Python data type is best for storing an ordered list of items that can change?", options: ["Tuple", "List", "Set"], answer: 1, reason: "Lists are ordered and mutable." },
+        { q: "What keyword starts a conditional statement in Python?", options: ["when", "if", "check"], answer: 1, reason: "The if keyword controls conditional logic." },
+        { q: "What does a function let you do?", options: ["Create a style sheet", "Reuse a block of code", "Turn on the internet"], answer: 1, reason: "Functions help you reuse logic multiple times." }
+      ];
+
+      const chosen = [];
+      document.querySelectorAll("[data-role='quiz-option']").forEach(btn => {
+        const q = Number(btn.dataset.question);
+        const choice = Number(btn.dataset.choice);
+        if (btn.classList.contains("selected")) chosen[q] = choice;
+      });
+
+      questions.forEach((q, qi) => {
+        const opts = document.querySelectorAll(`[data-question="${qi}"]`);
+        opts.forEach((btn, idx) => {
+          btn.classList.remove("selected", "correct", "wrong");
+          const chosenValue = chosen[qi];
+          if (chosenValue === idx) btn.classList.add("selected");
+          if (idx === q.answer) btn.classList.add("correct");
+          if (chosenValue === idx && idx !== q.answer) btn.classList.add("wrong");
+        });
+
+        const reasonText = document.getElementById(`quizReason-${qi}`);
+        if (reasonText) {
+          const correct = chosen[qi] === q.answer;
+          reasonText.textContent = `${correct ? "Correct." : "Review this."} ${q.reason}`;
+        }
+      });
+
+      const score = questions.reduce((sum, q, idx) => sum + (chosen[idx] === q.answer ? 1 : 0), 0);
+      state.quizScores.push({ score, total: questions.length, date: new Date().toISOString() });
+      saveState();
+      const scoreText = document.getElementById("quizScoreText");
+      if (scoreText) scoreText.textContent = `Score: ${score}/${questions.length}`;
+      render();
+      showToast(`Quiz completed. Score: ${score}/${questions.length}`);
+      return;
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    const option = event.target.closest("[data-role='quiz-option']");
+    if (!option) return;
+    const q = Number(option.dataset.question);
+    const choice = Number(option.dataset.choice);
+    document.querySelectorAll(`[data-role='quiz-option'][data-question="${q}"]`).forEach(btn => {
+      btn.classList.toggle("selected", btn === option);
+    });
+  });
+
+  document.addEventListener("input", (event) => {
+    const search = document.getElementById("skillSearch");
+    const filter = document.getElementById("skillFilter");
+    if (!search && !filter) return;
+
+    const term = (search?.value || "").trim().toLowerCase();
+    const selected = (filter?.value || "").toLowerCase();
+
+    const matchRows = document.querySelectorAll("#matchResults .partner-row");
+    matchRows.forEach(row => {
+      const rowText = (row.dataset.matchName || "") + " " + (row.dataset.skillList || "");
+      const includes = !term || rowText.includes(term);
+      const categoryMatch = !selected || (row.dataset.skillList || "").includes(selected.toLowerCase());
+      row.style.display = includes && categoryMatch ? "" : "none";
+    });
+
+    const cards = document.querySelectorAll("#skillCards .skill-card");
+    cards.forEach(card => {
+      const cardName = (card.dataset.skillName || "").toLowerCase();
+      const show = (!term || cardName.includes(term)) && (!selected || cardName.includes(selected.toLowerCase()));
+      card.style.display = show ? "" : "none";
+    });
+  });
+
+  document.addEventListener("submit", (event) => {
+    if (!event.target.matches("#profileForm")) return;
+    event.preventDefault();
+
+    const teachSkills = normalizeSkills(document.getElementById("teachSkills").value);
+    const learnSkills = normalizeSkills(document.getElementById("learnSkills").value);
+
+    state.profile = {
+      ...state.profile,
+      name: document.getElementById("name").value.trim() || "Student",
+      major: document.getElementById("major").value.trim(),
+      year: document.getElementById("year").value.trim(),
+      bio: document.getElementById("bio").value.trim(),
+      teach: teachSkills,
+      learn: learnSkills
+    };
+
+    saveState();
+    render();
+    showToast("Profile saved successfully.");
+  });
+
+  document.getElementById("resetDemo").addEventListener("click", () => {
+    if (!confirm("Reset all demo data for this project?")) return;
+    state = structuredClone(initialState);
+    saveState();
+    render();
+    showToast("Demo data reset.");
+  });
+
+  render();
+</script>
+</body>
+</html>
